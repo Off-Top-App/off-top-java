@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import offtop.WebSocket.Message;
+import offtop.Models.Message;
 
 
 @Controller

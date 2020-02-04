@@ -1,4 +1,4 @@
-package offtop.WebSocket;
+package offtop.Models;
 
 import java.time.LocalDateTime;
 
