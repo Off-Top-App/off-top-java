@@ -11,10 +11,6 @@
 	<groupId>offtop</groupId>
 	<artifactId>off-top</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<configuration>
-   		 <mainClass>OffTopApplication</mainClass>
-  	</configuration>
-	<name>offtop</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -94,6 +90,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>              
+			</plugin>	
 		</plugins>
 	</build>
 
