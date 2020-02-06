@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class OffTopController{
-
-
     @GetMapping("/Rest")
     public String Test(){
         return "Api works";
