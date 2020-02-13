@@ -1,6 +1,13 @@
 package offtop.Models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Settings{
+    
+    @Id
+    public int Id;
     public String defaultTopic;
     public String preset;
     public String colorTheme;

@@ -1,7 +1,12 @@
 package offtop.Models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class User{
     
+    @Id
     public int Id;
     public String firstName;
     public String lastName;

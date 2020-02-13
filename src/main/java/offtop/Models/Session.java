@@ -1,6 +1,11 @@
 package offtop.Models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Session{
+    @Id
     public int Id;
     public int audioFile;
     public String timeStart;

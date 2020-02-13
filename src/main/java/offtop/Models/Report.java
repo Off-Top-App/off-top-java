@@ -1,6 +1,11 @@
 package offtop.Models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+@Entity
 public class Report{
+    
+    @Id
     public int Id;
     public String createdAt;
     public String sessions;
