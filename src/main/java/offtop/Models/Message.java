@@ -8,7 +8,6 @@ public class Message {
     private LocalDateTime timeStamp;
 
     public Message(){
-
     }
 
     public Message(String from, String message, LocalDateTime timeStamp) {
@@ -32,10 +31,9 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
-                "from='" + from + '\'' +
-                ", message='" + message + '\'' +
-                ", timeStamp=" + timeStamp +
-                '}';
+            "from='" + from + '\'' +
+            ", message='" + message + '\'' +
+            ", timeStamp=" + timeStamp +
+            '}';
     }
-
 }
