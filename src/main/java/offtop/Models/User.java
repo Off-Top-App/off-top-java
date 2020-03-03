@@ -1,13 +1,18 @@
 package offtop.Models;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 public class User{
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int Id;
+
     public String firstName;
     public String lastName;
     public String city;
@@ -19,6 +24,27 @@ public class User{
     public String password;
     public String createdAt;
     public String deletedAt;
+
+    public User(){
+        
+    }
+
+    public User (int Id, String firstName, String lastName, String city, int age, String gender, String professional,
+     String email, String username, String password, String createdAt, String deletedAt ){
+      
+        this.Id = Id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.city = city;
+        this.age = age;
+        this.gender = gender;
+        this.professional = professional;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.deletedAt = deletedAt;
+     }
 
     public int getId() {
         return Id;
