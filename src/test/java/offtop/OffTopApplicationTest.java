@@ -6,6 +6,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest
 @DirtiesContext
-public class OffTopApplication {
+public class OffTopApplicationTest {
 
 }

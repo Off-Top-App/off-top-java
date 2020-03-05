@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+@Table (name = "user")
 public class User{
     
     @Id
@@ -26,7 +27,7 @@ public class User{
     public String deletedAt;
 
     public User(){
-        
+        super();
     }
 
     public User (int Id, String firstName, String lastName, String city, int age, String gender, String professional,
