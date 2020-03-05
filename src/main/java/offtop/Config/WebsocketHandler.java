@@ -1,7 +1,6 @@
 package offtop.Config;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -9,6 +8,7 @@ import java.util.stream.Stream;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -35,11 +35,17 @@ public class WebsocketHandler extends TextWebSocketHandler {
             webSocketSession.sendMessage(textMessage);
         }
     }
-
-	@Override
+    @Override
 	public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
-        System.out.println("sessions: " + session.toString());
+        System.out.println("CREATED SESSION: " + session.toString());
         sessions.add(session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        sessions.remove(session);
+        System.out.println("CLOSED CONNECTION");
+        super.afterConnectionClosed(session, status);
     }
 
     public void handleMessages(Map data){
