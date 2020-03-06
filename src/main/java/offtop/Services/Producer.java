@@ -8,18 +8,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Producer {
-   
+
    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
    private static final String TOPIC = "Computers";
 
    @Autowired
-   private KafkaTemplate <String,String> kafkaTemplate;
+   private KafkaTemplate<String, String> kafkaTemplate;
 
-   //produces and sends message by topic
-   public void sendMessage(String message){
+   // produces and sends message by topic
+   public void sendMessage(String message) {
       logger.info(String.format(" Producing message -> %s", message));
-      kafkaTemplate.send (TOPIC, message);
+      kafkaTemplate.send(TOPIC, message);
    }
-   
 
 }

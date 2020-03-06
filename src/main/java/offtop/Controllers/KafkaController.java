@@ -23,8 +23,10 @@ public class KafkaController{
 
     //Publish the messages sent from producer to consumer
     @PostMapping(value = "/publish")
-    public void sendMessageToKafkaTopic(@RequestParam("message") String message){
+    public String sendMessageToKafkaTopic(@RequestParam("message") String message){
         this.producer.sendMessage(message);
+        String result ="Published message is " + message;
+        return result;
     }
     
 }
