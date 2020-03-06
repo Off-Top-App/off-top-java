@@ -33,6 +33,7 @@ public class User{
     public User (int Id, String firstName, String lastName, String city, int age, String gender, String professional,
      String email, String username, String password, String createdAt, String deletedAt ){
       
+        super();
         this.Id = Id;
         this.firstName = firstName;
         this.lastName = lastName;
