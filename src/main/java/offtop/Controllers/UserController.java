@@ -11,11 +11,11 @@ import offtop.Models.User;
 public class UserController{
     
     @Autowired
-    UserRepository database;
+    UserRepository userRepository;
     
     @PostMapping(value ="/setUser")
     public User setUser (@RequestBody User user){
         System.out.println("***Post Request Created Successfully***");
-         return database.save(user);
+         return userRepository.save(user);
     }
 }
