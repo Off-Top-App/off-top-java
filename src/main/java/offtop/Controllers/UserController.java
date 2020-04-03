@@ -15,12 +15,6 @@ public class UserController{
 
     @Autowired
     UserRepository userRepository;
-
-    @PostMapping(value ="/setUser")
-    public User setUser (@RequestBody User user){
-        System.out.println("***Post Request Created Successfully***");
-         return userRepository.save(user);
-    }
     
     @GetMapping(value = "/user/{email}")
     public User getUser( @PathVariable("email")String email) {
