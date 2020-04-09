@@ -22,4 +22,12 @@ public class UserController{
         return user;
         
     }
+    
+    
+    
+    @PostMapping(value ="/setUser")
+    public User setUser (@RequestBody User user){
+        System.out.println("***Post Request Created Successfully***");
+         return userRepository.save(user);
+    }
 }
