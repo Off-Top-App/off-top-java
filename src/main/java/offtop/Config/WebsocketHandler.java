@@ -28,9 +28,6 @@ public class WebsocketHandler extends TextWebSocketHandler {
         for (int i = 0; i < sessions.size(); i++) {
             WebSocketSession webSocketSession = (WebSocketSession) sessions.get(i);
             Map value = new Gson().fromJson(message.getPayload(), Map.class);
-            System.out.println("value.values(): " + value.values());
-            System.out.println("value: " + value);
-            System.out.println("value.keys(): " + value.keySet());
             handleMessages(value);
             TextMessage textMessage = new TextMessage("Received " + value.get("message") + " !");
             webSocketSession.sendMessage(textMessage);
