@@ -18,25 +18,29 @@ import offtop.Services.WebsocketService;
 @Component
 public class WebsocketHandler extends TextWebSocketHandler {
 
-
     @Autowired
     private WebsocketService websocketService;
 
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message)
-            throws IOException {
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         for (int i = 0; i < sessions.size(); i++) {
             WebSocketSession webSocketSession = (WebSocketSession) sessions.get(i);
             Map value = new Gson().fromJson(message.getPayload(), Map.class);
+            System.out.println("value.values(): " + value.values());
+            System.out.println("value: " + value);
+            System.out.println("value.keys(): " + value.keySet());
             handleMessages(value);
             TextMessage textMessage = new TextMessage("Received " + value.get("message") + " !");
             webSocketSession.sendMessage(textMessage);
         }
     }
+
     @Override
-	public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
+        session.setTextMessageSizeLimit(1024 * 1024);
+        session.setBinaryMessageSizeLimit(1024 * 1024);
         System.out.println("CREATED SESSION: " + session.toString());
         sessions.add(session);
     }
@@ -44,15 +48,16 @@ public class WebsocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
-        System.out.println("CLOSED CONNECTION");
+        System.out.println("CLOSED CONNECTION: " + status);
         super.afterConnectionClosed(session, status);
     }
 
-    public void handleMessages(Map data){
+    public void handleMessages(Map data) {
         Stream<String> s = Stream.of(data.values().toString());
         s.forEach(val -> {
             websocketService.logData(val);
-        });    
+        });
+
     }
-    
+
 }
