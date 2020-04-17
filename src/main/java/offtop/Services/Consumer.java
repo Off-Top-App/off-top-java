@@ -16,8 +16,9 @@ public class Consumer {
     // Receives message from the producer and displays into console
     // KafkaListner suscribes to a topic and receives all the message sent into that
     // topic
-    @KafkaListener(topics = "Computers", groupId = "group_Id")
-    public void receive(String message) throws IOException {
+    @KafkaListener(topics = "IncomingAudioEvent", groupId = "group_Id", containerFactory = "audioEventConsumerFactory")
+    public void receive(AudioEvent message) throws IOException {
         logger.info(String.format("The message you entered -> %s", message));
+        logger.info(message.getTimeStamp().toString());
     }
 }

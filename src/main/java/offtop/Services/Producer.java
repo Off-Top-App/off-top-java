@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 public class Producer {
 
    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
-   private static final String TOPIC = "Computers";
+   private static final String TOPIC = "IncomingAudioEvent";
 
    @Autowired
-   private KafkaTemplate<String, String> kafkaTemplate;
+   private KafkaTemplate<String, AudioEvent> kafkaTemplate;
 
    // produces and sends message by topic
    public void sendMessage(String message) {
       logger.info(String.format(" Producing message -> %s", message));
-      kafkaTemplate.send(TOPIC, message);
+      // kafkaTemplate.send(TOPIC, message);
    }
    public void sendAudioFile(AudioEvent audioEvent) {
-      kafkaTemplate.send(TOPIC, audioEvent.getFile());
+      kafkaTemplate.send(TOPIC, audioEvent);
    }
 
 }
