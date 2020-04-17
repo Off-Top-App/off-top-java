@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 public class AudioEvent {
     private String file;
     private int userId;
-    private String timeStamp;
+    private LocalDateTime timeStamp;
 
 
-    public AudioEvent(String file,int  userId, String timeStamp){
+    public AudioEvent(String file,int  userId, LocalDateTime timeStamp){
         this.file = file;
         this.userId = userId;
         this.timeStamp = timeStamp;
@@ -19,7 +19,7 @@ public class AudioEvent {
     public int getUserId() {
         return this.userId;
     }
-    public String getTimeStamp() {
+    public LocalDateTime getTimeStamp() {
         return this.timeStamp;
     }
 

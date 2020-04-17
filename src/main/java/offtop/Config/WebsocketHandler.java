@@ -1,7 +1,9 @@
 package offtop.Config;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.gson.Gson;
@@ -30,9 +32,17 @@ public class WebsocketHandler extends TextWebSocketHandler {
             throws IOException {
         for (int i = 0; i < sessions.size(); i++) {
             WebSocketSession webSocketSession = (WebSocketSession) sessions.get(i);
-            AudioEvent value = new Gson().fromJson(message.getPayload(), AudioEvent.class);
-            handleMessages(value);
-            TextMessage textMessage = new TextMessage("Received " + value.getFile()+ " !");
+
+            Map<String,String> value = new Gson().fromJson(message.getPayload(), Map.class);
+
+            String file = value.get("file");
+            int userId =Integer.parseInt( value.get("userId"));
+            LocalDateTime timeStamp = LocalDateTime.parse(value.get("timestamp"));
+
+            AudioEvent audioEvent = new AudioEvent(file,userId,timeStamp);
+            
+            handleMessages(audioEvent);
+            TextMessage textMessage = new TextMessage("Received " + audioEvent.getFile()+ " !");
             webSocketSession.sendMessage(textMessage);
         }
     }
