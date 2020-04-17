@@ -24,6 +24,7 @@ public class Producer {
    }
    public void sendAudioFile(AudioEvent audioEvent) {
       kafkaTemplate.send(TOPIC, audioEvent);
+      logger.info(String.format(" Producing message -> %s", audioEvent));
    }
 
 }

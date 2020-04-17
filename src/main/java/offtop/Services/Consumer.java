@@ -19,6 +19,5 @@ public class Consumer {
     @KafkaListener(topics = "IncomingAudioEvent", groupId = "group_Id", containerFactory = "audioEventKafkaListenerFactory")
     public void receive(AudioEvent message) throws IOException {
         logger.info(String.format("The message you entered -> %s", message));
-        logger.info(message.getTimeStamp().toString());
     }
 }
