@@ -23,7 +23,7 @@ public class Producer {
       // kafkaTemplate.send(TOPIC, message);
    }
    public void sendAudioFile(AudioEvent audioEvent) {
-      kafkaTemplate.send(TOPIC, audioEvent);
+      kafkaTemplate.send(TOPIC+"-" + audioEvent.getTopic(), audioEvent);
       logger.info(String.format(" Producing message -> %s", audioEvent));
    }
 

@@ -37,9 +37,9 @@ public class WebsocketHandler extends TextWebSocketHandler {
 
             String file = value.get("file");
             int userId =Integer.parseInt( value.get("userId"));
-            LocalDateTime timeStamp = LocalDateTime.parse(value.get("timestamp"));
-
-            AudioEvent audioEvent = new AudioEvent(file,userId,timeStamp);
+            LocalDateTime timeStamp = LocalDateTime.now();
+            String topic = value.get("topic");
+            AudioEvent audioEvent = new AudioEvent(file,userId,timeStamp,topic);
             
             handleMessages(audioEvent);
             TextMessage textMessage = new TextMessage("Received " + audioEvent.getFile()+ " !");
