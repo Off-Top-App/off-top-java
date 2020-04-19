@@ -1,6 +1,7 @@
 package offtop.Config;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -28,8 +29,10 @@ public class WebsocketHandler extends TextWebSocketHandler {
         for (int i = 0; i < sessions.size(); i++) {
             WebSocketSession webSocketSession = (WebSocketSession) sessions.get(i);
             Map value = new Gson().fromJson(message.getPayload(), Map.class);
-            handleMessages(value);
+            handleMessages((ArrayList<Double>) value.get("audio"));
+            // System.out.println(value.get("audio").getClass().getName());
             TextMessage textMessage = new TextMessage("Received " + value.get("message") + " !");
+
             webSocketSession.sendMessage(textMessage);
         }
     }
@@ -49,11 +52,10 @@ public class WebsocketHandler extends TextWebSocketHandler {
         super.afterConnectionClosed(session, status);
     }
 
-    public void handleMessages(Map data) {
-        Stream<String> s = Stream.of(data.values().toString());
-        s.forEach(val -> {
-            websocketService.logData(val);
-        });
+    public void handleMessages(ArrayList<Double> data) {
+        // Stream<String> s = Stream.of(data.values().toString());
+
+        websocketService.logData(data);
 
     }
 
