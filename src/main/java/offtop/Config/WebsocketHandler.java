@@ -1,11 +1,11 @@
 package offtop.Config;
 
+// import java.util.stream.Stream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Stream;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,6 @@ public class WebsocketHandler extends TextWebSocketHandler {
             WebSocketSession webSocketSession = (WebSocketSession) sessions.get(i);
             Map value = new Gson().fromJson(message.getPayload(), Map.class);
             handleMessages((ArrayList<Double>) value.get("audio"));
-            // System.out.println(value.get("audio").getClass().getName());
             TextMessage textMessage = new TextMessage("Received " + value.get("message") + " !");
 
             webSocketSession.sendMessage(textMessage);
@@ -53,8 +52,8 @@ public class WebsocketHandler extends TextWebSocketHandler {
     }
 
     public void handleMessages(ArrayList<Double> data) {
-        // Stream<String> s = Stream.of(data.values().toString());
 
+        // Stream<String> s = Stream.of(data.values().toString());
         websocketService.logData(data);
 
     }
