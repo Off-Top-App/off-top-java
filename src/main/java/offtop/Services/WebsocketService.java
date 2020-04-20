@@ -12,38 +12,44 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.springframework.stereotype.Service;
 
+import offtop.Models.AudioEvent;
+
 @Service
 public class WebsocketService {
 
-    // here we will send data to kafka
-    public void logData(ArrayList<Double> val) {
-        byte[] byteArray = new byte[1024];
+  private final Producer producer;
 
-        Iterator<Double> iterator = val.iterator();
+  public WebsocketService(Producer producer) {
+    this.producer = producer;
+  }
 
-        System.out.println(byteArray);
+  public void writeToAudioFile(ArrayList<Double> audioData) {
+    byte[] byteArray = new byte[1024];
 
-        while (iterator.hasNext()) {
-            Integer i = iterator.next().intValue();
-            byteArray[i] = i.byteValue();
-        }
+    Iterator<Double> iterator = audioData.iterator();
 
-        // NOTE: the following print should be a list
-        // eg [112.0, 161.0, 245.0, 2.0, 175.0, 117.0, 35.0...]
-        System.out.println("Data Received from Flutter: " + val);
+    System.out.println(byteArray);
 
-        // NOTE: the following try-catch will attempt to create the audio file
-        // try {
-        // File someFile = new File("AudioFile.mp3");
-        // FileOutputStream fos = new FileOutputStream(someFile);
-        // fos.write(byteArray);
-        // fos.flush();
-        // fos.close();
-
-        // System.out.println("File created");
-        // } catch (Exception e) {
-        // // TODO: handle exception
-        // System.out.println("Error: " + e);
-        // }
+    while (iterator.hasNext()) {
+      Integer i = iterator.next().intValue();
+      byteArray[i] = i.byteValue();
     }
+    // NOTE: the following try-catch will attempt to create the audio file
+    // try {
+    // File someFile = new File("AudioFile.mp3");
+    // FileOutputStream fos = new FileOutputStream(someFile);
+    // fos.write(byteArray);
+    // fos.flush();
+    // fos.close();
+
+    // System.out.println("File created");
+    // } catch (Exception e) {
+    // // TODO: handle exception
+    // System.out.println("Error: " + e);
+    // }
+  }
+
+  public void sendFileEvent(AudioEvent audioEvent) {
+    producer.sendAudioFile(audioEvent);
+  }
 }
