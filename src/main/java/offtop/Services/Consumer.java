@@ -21,7 +21,7 @@ public class Consumer {
     @KafkaListener(topics = "outgoingFocusScore", groupId = "group_Id")
     public void receive(String message) throws IOException {
 
-        Map<String,String> value = new Gson().fromJson(message, Map.class);
+        Map value = new Gson().fromJson(message, Map.class);
 
         logger.info(String.format("The message you entered -> %s", value));
     }

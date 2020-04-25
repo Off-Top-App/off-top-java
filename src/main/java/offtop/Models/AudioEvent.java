@@ -3,25 +3,25 @@ package offtop.Models;
 import java.time.LocalDateTime;
 
 public class AudioEvent {
-    private String file;
+    private String audioData;
     private int userId;
-    private LocalDateTime timeStamp;
+    private String timeStamp;
     private String topic;
 
 
-    public AudioEvent(String file,int  userId, LocalDateTime timeStamp,String  topic){
-        this.file = file;
-        this.userId = userId;
+    public AudioEvent(String audioData,double userId, String timeStamp, String topic){
+        this.audioData = audioData;
+        this.userId = (int)Math.round(userId);
         this.timeStamp = timeStamp;
         this.topic = topic;
     }
-    public String getFile() {
-        return this.file;
+    public String getAudioData() {
+        return this.audioData;
     }
     public int getUserId() {
         return this.userId;
     }
-    public LocalDateTime getTimeStamp() {
+    public String getTimeStamp() {
         return this.timeStamp;
     }
     public String getTopic() {
@@ -35,7 +35,7 @@ public class AudioEvent {
     @Override
     public String toString() {
         return "Audio-Event{" +
-            "file='" + file + '\'' +
+            "audioData='" + audioData + '\'' +
             ", userId='" + userId + '\'' +
             ", timeStamp=" + timeStamp.toString() + '\''+
             ", topic = " + topic + '\''+
