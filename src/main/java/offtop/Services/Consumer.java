@@ -26,15 +26,22 @@ public class Consumer {
     // KafkaListner suscribes to a topic and receives all the message sent into that
     // topic
     @KafkaListener(topics = "outgoingFocusScore", groupId = "group_Id")
-    public void receiveFocusScore(String message) throws IOException {
+    public void receiveFocusScore(String message) {
         message = message.substring(1, message.length() - 1);
         String _message = message.replaceAll("\\\\\"", "\"");
         System.out.println("_message: " + _message);
         Map value = new Gson().fromJson(_message, Map.class);
         logger.info(String.format("The message you entered -> %s", value.toString()));
         double userId = (double) value.get("user_id");
-        handler.sendConsumerData(userId, message);
-        logger.info(String.format("The message you entered -> %s", value));
+        try {
+            logger.info(String.format("The message you entered -> %s", value.toString()));
+
+            handler.sendConsumerData(userId, _message);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }

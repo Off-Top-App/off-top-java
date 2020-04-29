@@ -42,10 +42,13 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
             String audioData = value.get("audio_data").toString();
             System.out.println("id type: " + value.get("user_id").getClass());
             AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
+           
+            //if the user connects to the websocket for the first time
             if(!userSessions.containsKey(userId)){
                 userSessions.put(userId,session);
             }
             webSocketSession = userSessions.get(userId);
+          
             websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
             TextMessage textMessage = new TextMessage("Received " + audioEvent.getAudioData()+ " !");
             webSocketSession.sendMessage(textMessage);
@@ -54,8 +57,12 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
 
 
     public void sendConsumerData(double userId,String message) throws IOException {
-    TextMessage textMessage = new TextMessage(message);
-        userSessions.get(userId).sendMessage(textMessage);
+        TextMessage textMessage = new TextMessage(message);
+        //Makes sure the user is connected to websocket
+        if(userSessions.containsKey(userId)){
+            userSessions.get(userId).sendMessage(textMessage);
+        }
+    
     }
 
     @Override
