@@ -3,8 +3,10 @@ package offtop.Config;
 // import java.util.stream.Stream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.time.LocalDateTime;
 
@@ -27,12 +29,12 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
     private WebsocketService websocketService;
 
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-
+    Map <Double,WebSocketSession> userSessions = new ConcurrentHashMap<Double,WebSocketSession>();
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         for (int i = 0; i < sessions.size(); i++) {
-            WebSocketSession webSocketSession = (WebSocketSession) sessions.get(i);
-
+            WebSocketSession webSocketSession; //= (WebSocketSession) sessions.get(i);
+            
             Map <String, T> value = new Gson().fromJson(message.getPayload(), Map.class);
 
             String audioData = value.get("audio_data").toString();
@@ -42,9 +44,20 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
             String topic = value.get("topic").toString();
             AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
             handleMessages(audioEvent, (ArrayList<Double>)value.get("audio_data"));
+            if(!userSessions.containsKey(userId)){
+                userSessions.put(userId,session);
+            }
+            webSocketSession = userSessions.get(userId);
+            // websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
             TextMessage textMessage = new TextMessage("Received " + audioEvent.getAudioData()+ " !");
             webSocketSession.sendMessage(textMessage);
         }
+    }
+
+
+    public void sendConsumerData(double userId,String message) throws IOException {
+    TextMessage textMessage = new TextMessage(message);
+        userSessions.get(userId).sendMessage(textMessage);
     }
 
     @Override
