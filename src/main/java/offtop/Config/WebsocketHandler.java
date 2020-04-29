@@ -3,8 +3,10 @@ package offtop.Config;
 // import java.util.stream.Stream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.time.LocalDateTime;
 
@@ -27,21 +29,40 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
     private WebsocketService websocketService;
 
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-
+    Map <Double,WebSocketSession> userSessions = new ConcurrentHashMap<Double,WebSocketSession>();
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         for (int i = 0; i < sessions.size(); i++) {
-            WebSocketSession webSocketSession = (WebSocketSession) sessions.get(i);
-
+            WebSocketSession webSocketSession; //= (WebSocketSession) sessions.get(i);
+            
             Map <String, T> value = new Gson().fromJson(message.getPayload(), Map.class);
             double userId = (double)value.get("user_id");
             LocalDateTime timeStamp = LocalDateTime.now();
             String topic = value.get("topic").toString();
-            AudioEvent audioEvent = new AudioEvent(userId,timeStamp.toString(),topic);
+            String audioData = value.get("audio_data").toString();
+            System.out.println("id type: " + value.get("user_id").getClass());
+            AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
+           
+            //if the user connects to the websocket for the first time
+            if(!userSessions.containsKey(userId)){
+                userSessions.put(userId,session);
+            }
+            webSocketSession = userSessions.get(userId);
+          
             websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
             TextMessage textMessage = new TextMessage("Received " + audioEvent.getAudioData()+ " !");
             webSocketSession.sendMessage(textMessage);
         }
+    }
+
+
+    public void sendConsumerData(double userId,String message) throws IOException {
+        TextMessage textMessage = new TextMessage(message);
+        //Makes sure the user is connected to websocket
+        if(userSessions.containsKey(userId)){
+            userSessions.get(userId).sendMessage(textMessage);
+        }
+    
     }
 
     @Override
