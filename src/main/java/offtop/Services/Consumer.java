@@ -35,7 +35,6 @@ public class Consumer {
         double userId = (double) value.get("user_id");
         try {
             logger.info(String.format("The message you entered -> %s", value.toString()));
-
             handler.sendConsumerData(userId, _message);
 
         } catch (IOException e) {

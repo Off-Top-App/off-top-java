@@ -38,19 +38,19 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
             Map <String, T> value = new Gson().fromJson(message.getPayload(), Map.class);
             double userId = (double)value.get("user_id");
             LocalDateTime timeStamp = LocalDateTime.now();
-            String topic = value.get("topic").toString();
-            String audioData = value.get("audio_data").toString();
-            System.out.println("id type: " + value.get("user_id").getClass());
-            AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
-           
+            if(value.get("topic") != null && value.get("audio_data") != null){
+                String topic = value.get("topic").toString();
+                String audioData = value.get("audio_data").toString();
+                AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
+                websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
+            }
             //if the user connects to the websocket for the first time
             if(!userSessions.containsKey(userId)){
                 userSessions.put(userId,session);
             }
             webSocketSession = userSessions.get(userId);
           
-            websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
-            TextMessage textMessage = new TextMessage("Received " + audioEvent.getAudioData()+ " !");
+            TextMessage textMessage = new TextMessage("Received data!");
             webSocketSession.sendMessage(textMessage);
         }
     }
@@ -58,9 +58,13 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
 
     public void sendConsumerData(double userId,String message) throws IOException {
         TextMessage textMessage = new TextMessage(message);
-        //Makes sure the user is connected to websocket
-        if(userSessions.containsKey(userId)){
-            userSessions.get(userId).sendMessage(textMessage);
+        if(userSessions.containsKey(userId) ==true){
+            WebSocketSession s = userSessions.get(userId);
+            if(s.isOpen()){
+                s.sendMessage(textMessage);
+            }else{
+                userSessions.remove(userId);
+            }
         }
     
     }
@@ -73,10 +77,11 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
         sessions.add(session);
     }
 
+    
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
-        System.out.println("CLOSED CONNECTION: " + status);
+        System.out.println("CLOSED CONNECTION: " + status.toString());
         super.afterConnectionClosed(session, status);
     }
 
