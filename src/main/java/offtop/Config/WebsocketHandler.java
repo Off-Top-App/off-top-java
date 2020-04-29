@@ -36,19 +36,17 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
             WebSocketSession webSocketSession; //= (WebSocketSession) sessions.get(i);
             
             Map <String, T> value = new Gson().fromJson(message.getPayload(), Map.class);
-
-            String audioData = value.get("audio_data").toString();
-            System.out.println("id type: " + value.get("user_id").getClass());
             double userId = (double)value.get("user_id");
             LocalDateTime timeStamp = LocalDateTime.now();
             String topic = value.get("topic").toString();
+            String audioData = value.get("audio_data").toString();
+            System.out.println("id type: " + value.get("user_id").getClass());
             AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
-            handleMessages(audioEvent, (ArrayList<Double>)value.get("audio_data"));
             if(!userSessions.containsKey(userId)){
                 userSessions.put(userId,session);
             }
             webSocketSession = userSessions.get(userId);
-            // websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
+            websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
             TextMessage textMessage = new TextMessage("Received " + audioEvent.getAudioData()+ " !");
             webSocketSession.sendMessage(textMessage);
         }
@@ -73,11 +71,6 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
         sessions.remove(session);
         System.out.println("CLOSED CONNECTION: " + status);
         super.afterConnectionClosed(session, status);
-    }
-
-    public void handleMessages(AudioEvent data, ArrayList<Double> audioData) {
-        websocketService.sendFileEvent(data);
-        websocketService.writeToAudioFile(audioData);
     }
 
 }
