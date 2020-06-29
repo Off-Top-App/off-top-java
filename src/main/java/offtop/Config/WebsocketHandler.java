@@ -51,12 +51,12 @@ public class WebsocketHandler<T> extends TextWebSocketHandler {
             }
             webSocketSession = userSessions.get(userId);
 
-            TextMessage textMessage = new TextMessage("Received data!");
+            TextMessage textMessage = new TextMessage("Received Incoming Audio data!");
             try {
                 webSocketSession.sendMessage(textMessage);
             } catch (Exception ex) {
                 synchronized (sessions) {
-                    sessions.remove(webSocketSession);
+                    System.out.println(ex);
                 }
             }
         }
