@@ -14,6 +14,7 @@ public class WebsocketService {
   AudioService audioService;
 
   public void handleIncomingMessages(ArrayList<Double> audioData, AudioEvent data){
-    audioService.converToByteDataAndProduceMessage(audioData, data);
+    audioService.writeBytesToFile(audioData,data);
+    
   }
 }

@@ -37,10 +37,11 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
             
             Map <String, T> value = new Gson().fromJson(message.getPayload(), Map.class);
             double userId = (double)value.get("user_id");
-            LocalDateTime timeStamp = LocalDateTime.now();
+            
             if(value.get("topic") != null && value.get("audio_data") != null){
                 String topic = value.get("topic").toString();
                 String audioData = value.get("audio_data").toString();
+                String timeStamp =  value.get("time_exported").toString();
                 AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
                 websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
             }

@@ -7,6 +7,7 @@ public class AudioEvent {
     private int userId;
     private String timeStamp;
     private String topic;
+    private String filePath;
 
     public AudioEvent() {}
 
@@ -14,6 +15,7 @@ public class AudioEvent {
         this.userId = (int) Math.round(userId);
         this.timeStamp = timeStamp;
         this.topic = topic;
+        this.filePath = null;
     }
 
     public AudioEvent(String audioData, double userId, String timeStamp, String topic) {
@@ -21,8 +23,27 @@ public class AudioEvent {
         this.userId = (int) Math.round(userId);
         this.timeStamp = timeStamp;
         this.topic = topic;
+        this.filePath = null;
     }
 
+    public AudioEvent(double userId, String timeStamp, String topic,String filePath) {//constuctor with filepath
+        this.userId = (int) Math.round(userId);
+        this.timeStamp = timeStamp;
+        this.topic = topic;
+        this.filePath = filePath;
+    }
+
+    public AudioEvent(String audioData, double userId, String timeStamp, String topic,String filePath) {//constructor with filepath
+        this.audioData = audioData;
+        this.userId = (int) Math.round(userId);
+        this.timeStamp = timeStamp;
+        this.topic = topic;
+        this.filePath = filePath;
+    }
+    public String getFilePath(){
+        return this.filePath;
+    }
+    
     public String getAudioData() {
         return this.audioData;
     }
@@ -39,7 +60,9 @@ public class AudioEvent {
         return this.topic;
     }
 
-
+    public void setFilePath(String filePath){
+        this.filePath = filePath;
+    }
     public void setAudioData(String audioData) {
         this.audioData = audioData;
     }
@@ -57,8 +80,8 @@ public class AudioEvent {
     }
 
     @Override
-    public String toString() {
-        return "Audio-Event{" + "audioData='" + audioData + '\'' + ", userId='" + userId + '\'' + ", timeStamp="
-                + timeStamp.toString() + '\'' + ", topic = " + topic + '\'' + '}';
-    }
+	public String toString() {
+		return "AudioEvent [audioData=" + audioData + ", filePath=" + filePath + ", timeStamp=" + timeStamp + ", topic="
+				+ topic + ", userId=" + userId + "]";
+	}
 }

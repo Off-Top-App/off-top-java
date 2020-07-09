@@ -12,22 +12,34 @@ import offtop.Models.AudioEvent;
 
 @Service
 public class AudioService{
+    @Autowired
+    AudioFirebase postFile;
 
     @Autowired
     Producer producer;
 
     //only being used when wanting to write files
-    public void writeBytesToFile(List<Double> audioData){
+    public void writeBytesToFile(List<Double> audioData, AudioEvent originalAudioEvent){
         try {
             File someFile = new File("AudioFile.wav");
             FileOutputStream fos = new FileOutputStream(someFile);
             fos.write(writeToBytes(audioData));
             fos.flush();
             fos.close();
-            System.out.println("File created");
-        } catch (Exception e) {
+            System.out.println("File created: setting <file> ->originalAudioEvent");
+            originalAudioEvent.setFilePath(someFile.getAbsolutePath());
+            
+            ProduceMessage(originalAudioEvent);//Produce data to python microservice
+ 
+            postFile.PostFirebase(someFile);
+            
+            
+        } catch(OutOfMemoryError E){
+            System.out.println("Error: " + E);
+        }catch (Exception e) {
             System.out.println("Error: " + e);
         }
+        
     }
     byte[] writeToBytes(List<Double> audioData) {
         byte[] result = new byte[audioData.size()];
@@ -36,19 +48,24 @@ public class AudioService{
         }
         return result;  
     }
-    public void converToByteDataAndProduceMessage(ArrayList<Double> audioData, AudioEvent originalAudioEvent ) {
-        byte[] audioBytes = writeToBytes(audioData);
-        AudioEvent audioEvent = new AudioEvent(
-          java.util.Arrays.toString(audioBytes), 
-          originalAudioEvent.getUserId(), 
-          originalAudioEvent.getTimeStamp(), 
-          originalAudioEvent.getTopic()
-        );
-        sendAudioEvent(audioEvent);
+    
+    public void ProduceMessage( AudioEvent originalAudioEvent ) {
+       try {
+            AudioEvent audioEvent = new AudioEvent(
+            originalAudioEvent.getUserId(),
+            originalAudioEvent.getTimeStamp(), 
+            originalAudioEvent.getTopic(),
+            originalAudioEvent.getFilePath()
+            );
+            sendAudioEvent(audioEvent);
+       } catch(OutOfMemoryError E){
+            System.out.println("Error: " + E);
+       }
     }
 
 
     public void sendAudioEvent(AudioEvent audioEvent) {
         producer.sendAudioFile(audioEvent);
+        
     }
 }
