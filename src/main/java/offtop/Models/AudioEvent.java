@@ -1,87 +1,79 @@
 package offtop.Models;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 public class AudioEvent {
-    private String audioData;
-    private int userId;
-    private String timeStamp;
+    private List<Double> audio_data;
+    private int user_id;
+    private String time_exported;
     private String topic;
     private String filePath;
 
-    public AudioEvent() {}
 
-    public AudioEvent(double userId, String timeStamp, String topic) {
-        this.userId = (int) Math.round(userId);
-        this.timeStamp = timeStamp;
-        this.topic = topic;
-        this.filePath = null;
-    }
-
-    public AudioEvent(String audioData, double userId, String timeStamp, String topic) {
-        this.audioData = audioData;
-        this.userId = (int) Math.round(userId);
-        this.timeStamp = timeStamp;
-        this.topic = topic;
-        this.filePath = null;
-    }
-
-    public AudioEvent(double userId, String timeStamp, String topic,String filePath) {//constuctor with filepath
-        this.userId = (int) Math.round(userId);
-        this.timeStamp = timeStamp;
-        this.topic = topic;
-        this.filePath = filePath;
-    }
-
-    public AudioEvent(String audioData, double userId, String timeStamp, String topic,String filePath) {//constructor with filepath
-        this.audioData = audioData;
-        this.userId = (int) Math.round(userId);
-        this.timeStamp = timeStamp;
-        this.topic = topic;
-        this.filePath = filePath;
-    }
-    public String getFilePath(){
-        return this.filePath;
-    }
     
-    public String getAudioData() {
-        return this.audioData;
+    public AudioEvent(List<Double> audio_data, int user_id, String time_exported, String topic, String filePath) {
+        this.audio_data = audio_data;
+        this.user_id = user_id;
+        this.time_exported = time_exported;
+        this.topic = topic;
+        this.filePath = filePath;
     }
 
-    public int getUserId() {
-        return this.userId;
+    public AudioEvent(List<Double> audio_data, int userId, String time_exported, String topic) {
+        this.audio_data = audio_data;
+        this.user_id = userId;
+        this.time_exported = time_exported;
+        this.topic = topic;
     }
 
-    public String getTimeStamp() {
-        return this.timeStamp;
+    public AudioEvent() {
+    }
+
+    public List<Double> getAudio_data() {
+        return audio_data;
+    }
+
+    public void setAudio_data(List<Double> audio_data) {
+        this.audio_data = audio_data;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getTime_exported() {
+        return time_exported;
+    }
+
+    public void setTime_exported(String time_exported) {
+        this.time_exported = time_exported;
     }
 
     public String getTopic() {
-        return this.topic;
-    }
-
-    public void setFilePath(String filePath){
-        this.filePath = filePath;
-    }
-    public void setAudioData(String audioData) {
-        this.audioData = audioData;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+        return topic;
     }
 
     public void setTopic(String topic) {
         this.topic = topic;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     @Override
-	public String toString() {
-		return "AudioEvent [audioData=" + audioData + ", filePath=" + filePath + ", timeStamp=" + timeStamp + ", topic="
-				+ topic + ", userId=" + userId + "]";
-	}
+    public String toString() {
+        return "AudioEvent [audio_data=" + audio_data + ", filePath=" + filePath + ", time_exported=" + time_exported
+                + ", topic=" + topic + ", user_id=" + user_id + "]";
+    }
+
+    
 }

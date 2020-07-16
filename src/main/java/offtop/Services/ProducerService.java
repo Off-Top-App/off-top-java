@@ -9,10 +9,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Producer {
+public class ProducerService {
 
-   private static final Logger logger = LoggerFactory.getLogger(Producer.class);
-   private static final String TOPIC = "IncomingAudioEvent";
+   private static final Logger logger = LoggerFactory.getLogger(ProducerService.class);
+   private static final String TOPIC = "outgoingAudioEvent";
 
    @Autowired
    private KafkaTemplate<String, AudioEvent> kafkaTemplate;
@@ -22,9 +22,11 @@ public class Producer {
       logger.info(String.format(" Producing message -> %s", message));
       // kafkaTemplate.send(TOPIC, message);
    }
-   public void sendAudioFile(AudioEvent audioEvent) {
+   public void produceToAudioTransformation(AudioEvent audioEvent) {
       kafkaTemplate.send(TOPIC, audioEvent);
       logger.info(String.format(" Producing message -> %s", audioEvent));
    }
+   
+   
 
 }

@@ -6,18 +6,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import offtop.Services.Producer;
+import offtop.Services.ProducerService;
 
 
 @RestController
 @RequestMapping(value ="/kafka")
 public class KafkaController{
 
-    private final Producer producer;
+    private final ProducerService producer;
 
     //Set up bean for KafkaController 
     @Autowired
-    KafkaController(Producer producer){
+    KafkaController(ProducerService producer){
         this.producer = producer;
     }
 

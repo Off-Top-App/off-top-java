@@ -3,12 +3,11 @@ package offtop.Config;
 // import java.util.stream.Stream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.time.LocalDateTime;
+
 
 import com.google.gson.Gson;
 
@@ -23,51 +22,57 @@ import offtop.Models.AudioEvent;
 import offtop.Services.WebsocketService;
 
 @Component
-public class WebsocketHandler <T> extends TextWebSocketHandler {
+public class WebsocketHandler<T> extends TextWebSocketHandler {
 
     @Autowired
     private WebsocketService websocketService;
 
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-    Map <Double,WebSocketSession> userSessions = new ConcurrentHashMap<Double,WebSocketSession>();
+    Map<Integer, WebSocketSession> userSessions = new ConcurrentHashMap<Integer, WebSocketSession>();
+
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         for (int i = 0; i < sessions.size(); i++) {
-            WebSocketSession webSocketSession; //= (WebSocketSession) sessions.get(i);
+            WebSocketSession webSocketSession; // = (WebSocketSession) sessions.get(i);
+
+            Map<String, T> websocketData = new Gson().fromJson(message.getPayload(), Map.class);
+            int userId = ((Double) websocketData.get("user_id")).intValue();
             
-            Map <String, T> value = new Gson().fromJson(message.getPayload(), Map.class);
-            double userId = (double)value.get("user_id");
-            
-            if(value.get("topic") != null && value.get("audio_data") != null){
-                String topic = value.get("topic").toString();
-                String audioData = value.get("audio_data").toString();
-                String timeStamp =  value.get("time_exported").toString();
-                AudioEvent audioEvent = new AudioEvent(audioData,userId,timeStamp.toString(),topic);
-                websocketService.handleIncomingMessages((ArrayList<Double>)value.get("audio_data"), audioEvent);
+            if (websocketData.get("topic") != null && websocketData.get("audio_data") != null) {
+                String topic = websocketData.get("topic").toString();
+                List<Double> audioData = (ArrayList<Double>) websocketData.get("audio_data");
+                String timeStamp =  websocketData.get("time_exported").toString();
+                AudioEvent audioEvent = new AudioEvent(audioData, userId, timeStamp.toString(), topic);
+                websocketService.handleIncomingMessages( audioEvent);
             }
-            //if the user connects to the websocket for the first time
-            if(!userSessions.containsKey(userId)){
-                userSessions.put(userId,session);
+            // if the user connects to the websocket for the first time
+            if (!userSessions.containsKey(userId)) {
+                userSessions.put(userId , session);
             }
             webSocketSession = userSessions.get(userId);
-          
-            TextMessage textMessage = new TextMessage("Received data!");
-            webSocketSession.sendMessage(textMessage);
+
+            TextMessage textMessage = new TextMessage("Received Incoming Audio data!");
+            try {
+                webSocketSession.sendMessage(textMessage);
+            } catch (Exception ex) {
+                synchronized (sessions) {
+                    System.out.println(ex);
+                }
+            }
         }
     }
 
-
-    public void sendConsumerData(double userId,String message) throws IOException {
+    public void sendConsumerData(double userId, String message) throws IOException {
         TextMessage textMessage = new TextMessage(message);
-        if(userSessions.containsKey(userId) ==true){
+        if (userSessions.containsKey(userId) == true) {
             WebSocketSession s = userSessions.get(userId);
-            if(s.isOpen()){
+            if (s.isOpen()) {
                 s.sendMessage(textMessage);
-            }else{
+            } else {
                 userSessions.remove(userId);
             }
         }
-    
+
     }
 
     @Override
@@ -78,7 +83,6 @@ public class WebsocketHandler <T> extends TextWebSocketHandler {
         sessions.add(session);
     }
 
-    
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
